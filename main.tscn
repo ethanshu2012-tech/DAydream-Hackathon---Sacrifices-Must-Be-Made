@@ -62,6 +62,8 @@ shape = SubResource("RectangleShape2D_7mycd")
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 position = Vector2(199, 352)
+position_smoothing_enabled = true
+position_smoothing_speed = 6.0
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
 scale = Vector2(5, 5)
