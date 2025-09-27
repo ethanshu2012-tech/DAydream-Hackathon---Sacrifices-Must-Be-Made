@@ -51,11 +51,11 @@ sources/2 = SubResource("TileSetAtlasSource_272bh")
 script = ExtResource("1_h2yge")
 
 [node name="Sprite2D" type="Sprite2D" parent="Player"]
-position = Vector2(494, 256)
+position = Vector2(229, 336)
 texture = ExtResource("2_1bvp3")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
-position = Vector2(495, 256)
+position = Vector2(228, 334)
 shape = SubResource("RectangleShape2D_7mycd")
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
