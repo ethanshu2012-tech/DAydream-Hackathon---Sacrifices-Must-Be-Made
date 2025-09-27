@@ -8,6 +8,12 @@ const JUMP_VELOCITY := -700.0
 var GRAVITY: float = 1200.0
 
 # ---------------------------
+# DOUBLE JUMP
+# ---------------------------
+const MAX_JUMPS := 2  # allows double jump
+var jumps_left := MAX_JUMPS
+
+# ---------------------------
 # HEALTH
 # ---------------------------
 var max_health: int = 100
@@ -19,18 +25,6 @@ var current_health: int = 100
 # ---------------------------
 const FALL_DEATH_Y := 1000.0
 var spawn_position: Vector2
-
-# ---------------------------
-# FALL DAMAGE SETTINGS
-# ---------------------------
-const FALL_DAMAGE_THRESHOLD := 300.0
-const FALL_DAMAGE_MULTIPLIER := 0.1
-
-# ---------------------------
-# FALL TRACKING
-# ---------------------------
-var was_in_air := false
-var fall_start_velocity := 0.0
 
 # ---------------------------
 # READY
@@ -70,24 +64,14 @@ func _physics_process(delta: float) -> void:
 	# --- Gravity ---
 	if not is_on_floor():
 		velocity.y += GRAVITY * delta
-		if not was_in_air:
-			was_in_air = true
-			fall_start_velocity = velocity.y  # start tracking fall
 	else:
-		# Player landed
-		if was_in_air:
-			was_in_air = false
-			# Use downward velocity for fall damage
-			if abs(velocity.y) > FALL_DAMAGE_THRESHOLD:
-				var damage := int((abs(velocity.y) - FALL_DAMAGE_THRESHOLD) * FALL_DAMAGE_MULTIPLIER)
-				if damage > 0:
-					print("Fall damage:", damage, "Velocity:", velocity.y)
-					take_damage(damage)
 		velocity.y = 0
+		jumps_left = MAX_JUMPS  # reset jumps when landing
 
 	# --- Jump ---
-	if Input.is_action_just_pressed("jump") and is_on_floor():
+	if Input.is_action_just_pressed("jump") and jumps_left > 0:
 		velocity.y = JUMP_VELOCITY
+		jumps_left -= 1
 
 	# --- Horizontal movement ---
 	var input_dir := Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left")
@@ -147,3 +131,4 @@ func respawn() -> void:
 	velocity = Vector2.ZERO
 	current_health = max_health
 	_update_health_bar()
+	jumps_left = MAX_JUMPS  # reset double jump on respawn
